@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tier List</title>
+		<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<script type="text/javascript" src="/jquery"></script>
+		<style>
+			body {
+				font-family:"Raleway";
+				font-size:14pt;
+			}
+
+			h1 {
+				font-family:"Raleway";
+				font-size:30pt;
+			}
+			table.main {
+				border-collapse: separate;
+				border-spacing: 4em 1em;
+				text-align:center;
+			}
+			table.main tr th thead {
+				font-size:bold;
+			}
+			table.main tr td tbody {
+				font-size:normal;
+			}
+		</style>
+		<script type="text/javascript">
+			window.filelist = null;
+			function parseData() {
+				fields = ['field1', 'field2', 'field3'];
+				data = [];
+				for(var k = 0; k < window.filelist.length; k++) {
+					var f3 = "Private";
+					if(filelist[k][2] == 1)
+						f3 = "Public";
+
+					data.push({field1: window.filelist[k][1], field2: window.filelist[k][0], field3: f3});
+				}
+				var rows = '';
+        		$.each(data, function(index, item) {
+            		var row = '<tr>';
+           			$.each(fields, function(index, field) {
+                		row += '<td>' + item[field+''] + '</td>';
+            		});
+            		rows += row + '<tr>';
+        		});
+        		$('#' + 'filetable' + ' tbody').html(rows);
+			}
+        	function WebSocketActivate() {
+            	if ("WebSocket" in window) {
+                	var ws = new WebSocket("ws://localhost:8888/w?Id=123456789");
+                	ws.onopen = function() {
+                    	ws.send('0');
+                	};
+                	ws.onmessage = function (evt) { 
+                	    var received_msg = evt.data;
+                	    console.log(received_msg);
+                	    window.filelist = $.parseJSON(received_msg);
+                	    parseData();
+                	};
+                	ws.onclose = function() { 
+                    	return;
+                	};
+            	} else {
+                	//WebSockets not supported by browser
+                	return;
+            	}
+        	}
+        	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }
+        	window.onload = WebSocketActivate;
+        </script>
+		<h1>Hello</h1>
+	</head>
+	<body>
+		This is a tier list display program.<br/>
+		<table class='main' id='filetable'>
+			<thead>
+			<tr> <th>Name</th><th>Owner</th><th>Access</th> </th>
+			</thead>
+			<tbody>
+			<tr> <td>asdf</td><td>sdfsdf</td><td>sdfjalkjslfjasfasdkfjaslfhaslkf</td></tr>
+			<tr> <td>asdf</td><td>sdfsdf</td><td>sdfjalkjslfjasfasdkfjaslfhaslkf</td></tr>
+			</tbody>
+		</table>
+	</body>
+</html>

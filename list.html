@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			window.filename = "";
+			function getArguments() {
+				var parameters = location.search.substring(1).split("&");
+
+    			var temp = parameters[0].split("=");
+    			window.filename = unescape(temp[1]);
+    			console.log(window.filename);
+			}
+			window.onload = getArguments;
+		</script>
+	</head>
+	
+	<body>
+		<a href="/">Back</a>
+	</body>
+</html>
