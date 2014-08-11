@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<script type="text/javascript" src="/jquery"></script>
 		<script type="text/javascript">
 			window.filename = "";
 			function getArguments() {
@@ -8,13 +10,60 @@
 
     			var temp = parameters[0].split("=");
     			window.filename = unescape(temp[1]);
-    			console.log(window.filename);
 			}
-			window.onload = getArguments;
+			//window.onload = getArguments;
 		</script>
+		<style>
+			html {
+				background-color:rgb(255,100,100);
+			}
+
+			body {
+				font-family:"Raleway";
+				font-size:14pt;
+			}
+
+			mh {
+				font-familiy:"Raleway";
+				font-size:17pt;
+				font-weight:bold;
+			}
+
+			h1 {
+				font-family:"Raleway";
+				font-size:30pt;
+			}
+			table.main {
+				border-collapse: separate;
+				border-spacing: 4em 1em;
+				text-align:center;
+			}
+			table.main tr th thead {
+				font-size:bold;
+			}
+			table.main tr td tbody {
+				font-size:normal;
+			}
+
+		</style>
+		<title>List View</title>
 	</head>
 	
 	<body>
-		<a href="/">Back</a>
+		<a href="/">Back</a><br/><br/>
+		<mh>
+			<script type="text/javascript">
+				getArguments();
+				document.write("Displaying " + window.filename + ":")
+			</script>
+		</mh>
+		<table id="listTable" class="main">
+			<thead>
+				<tr><th>Picture</th><th>Name</th><th>Rank</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>N/A</td><td>Fox</td><td>1</td></tr>
+			</tbody>
+		</table>
 	</body>
 </html>

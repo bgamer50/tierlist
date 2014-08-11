@@ -5,14 +5,26 @@
 		<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 		<script type="text/javascript" src="/jquery"></script>
 		<style>
+			html {
+				background-color:rgb(255,100,100);
+			}
+
 			body {
 				font-family:"Raleway";
 				font-size:14pt;
 			}
 
+			p {
+				padding-left:4.0em;
+				width:54%;
+				text-indent:1em;
+			}
+
 			h1 {
 				font-family:"Raleway";
 				font-size:30pt;
+				width:58%;
+				border-bottom:0.1em solid black;
 			}
 			table.main {
 				border-collapse: separate;
@@ -36,7 +48,9 @@
 					if(filelist[k][2] == 1)
 						f3 = "Public";
 
-					data.push({field1: window.filelist[k][1], field2: window.filelist[k][0], field3: f3});
+					var f1 = "<a href='/list?name=" + window.filelist[k][1] + "'>" + window.filelist[k][1] + "</a>";
+
+					data.push({field1: f1, field2: window.filelist[k][0], field3: f3});
 				}
 				var rows = '';
         		$.each(data, function(index, item) {
@@ -71,10 +85,10 @@
         	function pause(t) { sTime = new Date().getTime(); while(new Date().getTime() - sTime < t); }
         	window.onload = WebSocketActivate;
         </script>
-		<h1>Hello</h1>
+		<h1>Tier List Directory</h1>
 	</head>
 	<body>
-		This is a tier list display program.<br/>
+		<p>This is the directory of tier lists created with the tier list generator.  Clicking on one of the lists below will take you to the respective list.  Voting is allowed on public lists.  Lists can be edited from the same device, user account, and browser used to create one.</p>
 		<table class='main' id='filetable'>
 			<thead>
 			<tr> <th>Name</th><th>Owner</th><th>Access</th> </th>
