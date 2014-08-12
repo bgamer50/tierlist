@@ -10,6 +10,43 @@
 
     			var temp = parameters[0].split("=");
     			window.filename = unescape(temp[1]);
+    			WebSocketActivate();
+			}
+			function WebSocketActivate() {
+            	if ("WebSocket" in window) {
+                	var ws = new WebSocket("ws://localhost:8888/w?Id=123456789");
+                	ws.onopen = function() {
+                    	ws.send(window.filename);
+                	};
+                	ws.onmessage = function (evt) { 
+                	    var received_msg = evt.data;
+                	    console.log(received_msg);
+                	    window.file = $.parseJSON(received_msg);
+                	    parseData();
+                	};
+                	ws.onclose = function() { 
+                    	return;
+                	};
+            	} else {
+                	//WebSockets not supported by browser
+                	return;
+            	}
+        	}
+			function parseData() {
+				fields = ['field1', 'field2', 'field3'];
+				data = [];
+				for(var k = 0; k < window.file.length; k++) {
+					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2]});
+				}
+				var rows = '';
+        		$.each(data, function(index, item) {
+            		var row = '<tr>';
+           			$.each(fields, function(index, field) {
+                		row += '<td>' + item[field+''] + '</td>';
+            		});
+            		rows += row + '<tr>';
+        		});
+        		$('#' + 'listtable' + ' tbody').html(rows);
 			}
 			//window.onload = getArguments;
 		</script>
@@ -39,10 +76,10 @@
 				text-align:center;
 			}
 			table.main tr th thead {
-				font-size:bold;
+				font-weight:bold;
 			}
 			table.main tr td tbody {
-				font-size:normal;
+				font-weight:normal;
 			}
 
 		</style>
@@ -57,7 +94,7 @@
 				document.write("Displaying " + window.filename + ":")
 			</script>
 		</mh>
-		<table id="listTable" class="main">
+		<table id="listtable" class="main">
 			<thead>
 				<tr><th>Picture</th><th>Name</th><th>Rank</th></tr>
 			</thead>

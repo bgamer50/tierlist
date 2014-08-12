@@ -10,5 +10,8 @@ class Database:
 	def getFileList(self):
 		cursor = self.connection.cursor()
 		return cursor.execute("select * from filelist").fetchall()
+	def getFile(self, filename):
+		cursor = self.connection.cursor()
+		return cursor.execute("select img, name, rank from files where filename = '" + filename + "' order by rank").fetchall()
 
 ##__End Class Definitions__##
