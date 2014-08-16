@@ -33,10 +33,10 @@
             	}
         	}
 			function parseData() {
-				fields = ['field1', 'field2', 'field3'];
+				fields = ['field1', 'field2', 'field3', 'field4'];
 				data = [];
 				for(var k = 0; k < window.file.length; k++) {
-					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2]});
+					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: '<img src="/del" alt="Delete" height="18" width="18"'});
 				}
 				var rows = '';
         		$.each(data, function(index, item) {
@@ -102,5 +102,6 @@
 				<tr><td>N/A</td><td>Fox</td><td>1</td></tr>
 			</tbody>
 		</table>
+		<br/>
 	</body>
 </html>

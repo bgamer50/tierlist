@@ -9,6 +9,7 @@ from sqlManager import Database;
 ##__Begin Variable Definitions__##
 clients = dict()
 db = Database("./data/main.db")
+delImg = open("./img/del.png")
 ##__End Variable Definitions__##
 
 ##__Begin Class Definitions__##
@@ -32,16 +33,27 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print "Client %s requested : %s" % (self.id, message)
 
         #returns what has been requested to client
-        if int(message) == 0:
-        	self.write_message(json.dumps(db.getFileList()))
+        #0 = the file list; otherwise a file
+        try:
+        	if int(message) == 0:
+        		self.write_message(json.dumps(db.getFileList()))
+        except:
+        	self.write_message(json.dumps(db.getFile(message)))
         
     def on_close(self):
         if self.id in clients:
             del clients[self.id]
+
 class ListHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
 		self.render("list.html");
+
+class DelHandler(tornado.web.RequestHandler):
+	@tornado.web.asynchronous
+	def get(self):
+		self.write(delImg.read())
+		self.finish()
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -49,7 +61,8 @@ class Application(tornado.web.Application):
 		(r"/", MainHandler),
 		(r"/w", WebSocketHandler),
 		(r"/jquery", jqueryHandler),
-		(r"/list", ListHandler)
+		(r"/list", ListHandler),
+		(r"/del", DelHandler),
 		]
 		settings = {
 			"debug": True,
