@@ -33,11 +33,20 @@
             	}
         	}
 			function parseData() {
-				fields = ['field1', 'field2', 'field3', 'field4'];
+				fields = ['field1', 'field2', 'field3', 'field4', 'field5'];
 				data = [];
 				for(var k = 0; k < window.file.length; k++) {
-					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: '<img src="/del" alt="Delete" height="18" width="18"'});
+					var f4 = "";
+					if(k != 0)
+						f4 = "<input type=button value='+'></input>";
+					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
 				}
+				//add the add option
+				var f5 = "<input type=button value='Add'></input>";
+				var f2 = "<input type=text value='Enter Name'";
+				var f3 = window.file[window.file.length - 1][window.file[0].length - 1] + 1;
+				var f4 = "";
+				data.push({field1: ".", field2: f2, field3: f3, field4: f4, field5:f5});
 				var rows = '';
         		$.each(data, function(index, item) {
             		var row = '<tr>';
@@ -95,11 +104,8 @@
 			</script>
 		</mh>
 		<table id="listtable" class="main">
-			<thead>
-				<tr><th>Picture</th><th>Name</th><th>Rank</th></tr>
-			</thead>
 			<tbody>
-				<tr><td>N/A</td><td>Fox</td><td>1</td></tr>
+				<tr><td>N/A</td><td>N/A</td><td>1</td></tr>
 			</tbody>
 		</table>
 		<br/>
