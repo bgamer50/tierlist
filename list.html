@@ -38,7 +38,7 @@
 				for(var k = 0; k < window.file.length; k++) {
 					var f4 = "";
 					if(k != 0)
-						f4 = "<input type=button value='+'></input>";
+						f4 = "<input type=button value='+' onclick='WebSocketSendInfo(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
 					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
 				}
 				//add the add option
@@ -57,6 +57,27 @@
         		});
         		$('#' + 'listtable' + ' tbody').html(rows);
 			}
+			function WebSocketSendInfo(name, rank) {
+            	if ("WebSocket" in window) {
+                	var ws = new WebSocket("ws://localhost:8888/ww?Id=123456789");
+                	ws.onopen = function() {
+                		data = [window.filename, name, rank];
+                    	ws.send(JSON.stringify(data));
+                	};
+                	ws.onmessage = function (evt) { 
+                	    var received_msg = evt.data;
+                	    console.log(received_msg);
+                	    //update the table
+                	    WebSocketActivate();
+                	};
+                	ws.onclose = function() { 
+                    	return;
+                	};
+            	} else {
+                	console.log("WebSockets not supported by browser.");
+                	return;
+            	}
+        	}
 			//window.onload = getArguments;
 		</script>
 		<style>
