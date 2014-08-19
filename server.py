@@ -55,7 +55,7 @@ class DelHandler(tornado.web.RequestHandler):
 		self.write(delImg.read())
 		self.finish()
 
-class InfoPostHandler(tornado.websocket.WebSocketHandler):
+class RankChangeHandler(tornado.websocket.WebSocketHandler):
 	def open(self, *args):
 		self.id = self.get_argument("Id")
 		self.stream.set_nodelay(True)
@@ -72,6 +72,23 @@ class InfoPostHandler(tornado.websocket.WebSocketHandler):
 		#tells client to update
 		self.write_message("update")
 
+class AddHandler(tornado.websocket.WebSocketHandler):
+	def open(self, *args):
+		self.id = self.get_argument("Id")
+		self.stream.set_nodelay(True)
+		clients[self.id] = {"id": self.id, "object": self}
+
+	def on_message(self, message):
+		#prints what is posted and by whom
+		print "Client %s posting : %s" % (self.id, message)
+
+		#manipulates database
+		#takes filename, image, name, rank and adds to database
+		theInput = json.loads(message)
+		db.add(theInput[0], theInput[1], theInput[2], theInput[3]);
+		#tells client to update
+		self.write_message("update")
+
 class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
@@ -80,7 +97,8 @@ class Application(tornado.web.Application):
 		(r"/jquery", jqueryHandler),
 		(r"/list", ListHandler),
 		(r"/del", DelHandler),
-		(r"/ww", InfoPostHandler),
+		(r"/ww", RankChangeHandler),
+		(r"/x", AddHandler)
 		]
 		settings = {
 			"debug": True,

@@ -20,4 +20,8 @@ class Database:
 		cursor.execute("update files set rank=" + str(rank + 1) + " where filename = '" + filename + "' and rank=" + str(rank))
 		cursor.execute("update files set rank=" + str(rank) + " where filename= '" + filename + "' and name='" + name + "'")
 
+	def add(self, filename, image, name, rank):
+		cursor = self.connection.cursor()
+		cursor.execute("insert into files values ('" + image + "'," + "'" + name + "'," + str(rank) + ",'" + filename + "'")
+
 ##__End Class Definitions__##

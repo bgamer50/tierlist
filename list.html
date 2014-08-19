@@ -38,13 +38,14 @@
 				for(var k = 0; k < window.file.length; k++) {
 					var f4 = "";
 					if(k != 0)
-						f4 = "<input type=button value='+' onclick='WebSocketSendInfo(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
+						f4 = "<input type=button value='+' onclick='WebSocketChangeRank(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
 					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
 				}
 				//add the add option
-				var f5 = "<input type=button value='Add'></input>";
-				var f2 = "<input type=text value='Enter Name'";
 				var f3 = window.file[window.file.length - 1][window.file[0].length - 1] + 1;
+				var f5 = "<input type=button value='Add' onclick='WebSocketAdd(" + '"' + "asdf" + '"' + "," + "document.getElementById('namebox').value" + "," + f3 + ");'></input>";
+				console.log(f5);
+				var f2 = "<input type=text value='Enter Name' id='namebox'></input>";
 				var f4 = "";
 				data.push({field1: ".", field2: f2, field3: f3, field4: f4, field5:f5});
 				var rows = '';
@@ -57,11 +58,32 @@
         		});
         		$('#' + 'listtable' + ' tbody').html(rows);
 			}
-			function WebSocketSendInfo(name, rank) {
+			function WebSocketChangeRank(name, rank) {
             	if ("WebSocket" in window) {
                 	var ws = new WebSocket("ws://localhost:8888/ww?Id=123456789");
                 	ws.onopen = function() {
                 		data = [window.filename, name, rank];
+                    	ws.send(JSON.stringify(data));
+                	};
+                	ws.onmessage = function (evt) { 
+                	    var received_msg = evt.data;
+                	    console.log(received_msg);
+                	    //update the table
+                	    WebSocketActivate();
+                	};
+                	ws.onclose = function() { 
+                    	return;
+                	};
+            	} else {
+                	console.log("WebSockets not supported by browser.");
+                	return;
+            	}
+        	}
+        	function WebSocketAdd(image, name, rank) {
+            	if ("WebSocket" in window) {
+                	var ws = new WebSocket("ws://localhost:8888/ww?Id=123456789");
+                	ws.onopen = function() {
+                		data = [window.filename, image, name, rank];
                     	ws.send(JSON.stringify(data));
                 	};
                 	ws.onmessage = function (evt) { 
