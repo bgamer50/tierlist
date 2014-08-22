@@ -38,7 +38,6 @@
 				for(var k = 0; k < window.file.length; k++) {
 					var f4 = "";
 					if(k != 0)
-						//f4 = "<input type=button value='+' onclick='WebSocketChangeRank(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
 						f4 = "<div id='promote" + window.file[k][1] + "'></div>";
 					
 					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
@@ -50,7 +49,8 @@
 				var addbutton = document.createElement('input');
 				addbutton.setAttribute('type', 'button');
 				addbutton.setAttribute('value', "Add");
-				addbutton.setAttribute('id', 'addbutton');
+				addbutton.setAttribute('id', 'addbutton'); 
+				addbutton.addEventListener("click", function(event) { WebSocketAdd(".", document.getElementById("namebox").value, window.file[window.file.length - 1][2] + 1); event.preventDefault(); });
 
 				//the text field "name box"
 				var namebox = document.createElement('input');
@@ -72,17 +72,19 @@
 
         		document.getElementById("nameboxContainer").appendChild(namebox);
         		document.getElementById("addbuttonContainer").appendChild(addbutton);
-        		for(var k = 1; k < window.file.length; k++) {
-        			//promote button is a temp object
-					promotebutton = document.createElement('input');
-					promotebutton.setAttribute('type', 'button');
-					promotebutton.setAttribute('value', '+');
-					var arg1 = "" + window.file[k][1];
-					var arg2 = -1 + window.file[k][2];
-					promotebutton.addEventListener("click", function(event) { WebSocketChangeRank(arg1, arg2); event.preventDefault(); });
+        		promoteButtonLoop(1);
+			}
+			function promoteButtonLoop(k) {
+				if(k < 1 || k >= window.file.length)
+					return;
+				promotebutton = document.createElement('input');
+				promotebutton.setAttribute('type', 'button');
+				promotebutton.setAttribute('value', '+');
 
-					document.getElementById("promote" + window.file[k][1]).appendChild(promotebutton);
-        		}
+				promotebutton.addEventListener("click", function(event) { WebSocketChangeRank("" + window.file[k][1], -1 + window.file[k][2]); event.preventDefault(); });
+
+				document.getElementById("promote" + window.file[k][1]).appendChild(promotebutton);
+				promoteButtonLoop(k + 1);
 			}
 			function WebSocketChangeRank(name, rank) {
             	if ("WebSocket" in window) {
