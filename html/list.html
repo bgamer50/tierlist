@@ -38,16 +38,28 @@
 				for(var k = 0; k < window.file.length; k++) {
 					var f4 = "";
 					if(k != 0)
-						f4 = "<input type=button value='+' onclick='WebSocketChangeRank(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
+						//f4 = "<input type=button value='+' onclick='WebSocketChangeRank(" + '"' + window.file[k][1] + '"' + "," + (-1 + window.file[k][2]) + ");'></input>";
+						f4 = "<div id='promote" + window.file[k][1] + "'></div>";
+					
 					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
 				}
-				//add the add option
+
 				var f3 = window.file[window.file.length - 1][window.file[0].length - 1] + 1;
-				var f5 = "<input type=button value='Add' onclick='WebSocketAdd(" + '"' + "asdf" + '"' + "," + "document.getElementById('namebox').value" + "," + f3 + ");'></input>";
-				console.log(f5);
-				var f2 = "<input type=text value='Enter Name' id='namebox'></input>";
+				//Create the elements
+				//start with the add button
+				var addbutton = document.createElement('input');
+				addbutton.setAttribute('type', 'button');
+				addbutton.setAttribute('value', "Add");
+				addbutton.setAttribute('id', 'addbutton');
+
+				//the text field "name box"
+				var namebox = document.createElement('input');
+				namebox.setAttribute('type', 'text');
+				namebox.setAttribute('value', 'Enter Name');
+				namebox.setAttribute('id', 'namebox');
+
 				var f4 = "";
-				data.push({field1: ".", field2: f2, field3: f3, field4: f4, field5:f5});
+				data.push({field1: ".", field2: "<div id='nameboxContainer'></div>", field3: f3, field4: f4, field5: "<div id='addbuttonContainer'></div>"});
 				var rows = '';
         		$.each(data, function(index, item) {
             		var row = '<tr>';
@@ -57,6 +69,20 @@
             		rows += row + '<tr>';
         		});
         		$('#' + 'listtable' + ' tbody').html(rows);
+
+        		document.getElementById("nameboxContainer").appendChild(namebox);
+        		document.getElementById("addbuttonContainer").appendChild(addbutton);
+        		for(var k = 1; k < window.file.length; k++) {
+        			//promote button is a temp object
+					promotebutton = document.createElement('input');
+					promotebutton.setAttribute('type', 'button');
+					promotebutton.setAttribute('value', '+');
+					var arg1 = "" + window.file[k][1];
+					var arg2 = -1 + window.file[k][2];
+					promotebutton.addEventListener("click", function(event) { WebSocketChangeRank(arg1, arg2); event.preventDefault(); });
+
+					document.getElementById("promote" + window.file[k][1]).appendChild(promotebutton);
+        		}
 			}
 			function WebSocketChangeRank(name, rank) {
             	if ("WebSocket" in window) {
@@ -81,7 +107,7 @@
         	}
         	function WebSocketAdd(image, name, rank) {
             	if ("WebSocket" in window) {
-                	var ws = new WebSocket("ws://localhost:8888/ww?Id=123456789");
+                	var ws = new WebSocket("ws://localhost:8888/x?Id=123456789");
                 	ws.onopen = function() {
                 		data = [window.filename, image, name, rank];
                     	ws.send(JSON.stringify(data));
