@@ -16,7 +16,7 @@ delImg = open("./img/del.png")
 class MainHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
-		self.render("index.html")
+		self.render("./html/index.html")
 class jqueryHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
@@ -47,7 +47,7 @@ class InfoRequestHandler(tornado.websocket.WebSocketHandler):
 class ListHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
-		self.render("list.html");
+		self.render("./html/list.html");
 
 class DelHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
