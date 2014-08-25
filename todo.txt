@@ -1,7 +1,0 @@
-To Do:
-1. Change table to sortable
-2. Remove Websockets
-3. Implement Deletion
-4. Anything else to make it fully functioning
-5. Fork and make a barebones tierlist
-6. Get laughed at by Jacob because it's still too many lines of code

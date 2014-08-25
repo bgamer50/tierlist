@@ -18,6 +18,11 @@ class MainHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./html/index.html")
 
+class UpdateHandler(tornado.web.RequestHandler):
+		def post(self):
+			arg = tornado.escape.json_decode(self.request.body)
+			db.update(arg.pop(), arg)
+
 class sortableHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
@@ -30,9 +35,6 @@ class InfoRequestHandler(tornado.websocket.WebSocketHandler):
         clients[self.id] = {"id": self.id, "object": self}
 
     def on_message(self, message):        
-        #prints what has been requested and by whom
-        print "Client %s requested : %s" % (self.id, message)
-
         #returns what has been requested to client
         #0 = the file list; otherwise a file
         try:
@@ -56,39 +58,10 @@ class DelHandler(tornado.web.RequestHandler):
 		self.write(delImg.read())
 		self.finish()
 
-class RankChangeHandler(tornado.websocket.WebSocketHandler):
-	def open(self, *args):
-		self.id = self.get_argument("Id")
-		self.stream.set_nodelay(True)
-		clients[self.id] = {"id": self.id, "object": self}
-
-	def on_message(self, message):
-		#prints what is posted and by whom
-		print "Client %s posting : %s" % (self.id, message)
-
-		#manipulates database
-		#takes name, filename, new rank and update the database
-		theInput = json.loads(message)
-		db.changeRank(theInput[0], theInput[1], theInput[2]);
-		#tells client to update
-		self.write_message("update")
-
-class AddHandler(tornado.websocket.WebSocketHandler):
-	def open(self, *args):
-		self.id = self.get_argument("Id")
-		self.stream.set_nodelay(True)
-		clients[self.id] = {"id": self.id, "object": self}
-
-	def on_message(self, message):
-		#prints what is posted and by whom
-		print "Client %s posting : %s" % (self.id, message)
-
-		#manipulates database
-		#takes filename, image, name, rank and adds to database
-		theInput = json.loads(message)
-		db.add(theInput[0], theInput[1], theInput[2], theInput[3]);
-		#tells client to update
-		self.write_message("update")
+class AddHandler(tornado.web.RequestHandler):
+	def post(self):
+		arg = tornado.escape.json_decode(self.request.body)
+		db.add(arg[0], arg[1], arg[2], arg[3])
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -98,8 +71,8 @@ class Application(tornado.web.Application):
 		(r"/jquerysortable", sortableHandler),
 		(r"/list", ListHandler),
 		(r"/del", DelHandler),
-		(r"/ww", RankChangeHandler),
-		(r"/x", AddHandler)
+		(r"/x", AddHandler),
+		(r"/z", UpdateHandler),
 		]
 		settings = {
 			"debug": True,

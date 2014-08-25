@@ -19,9 +19,18 @@ class Database:
 		cursor = self.connection.cursor()
 		cursor.execute("update files set rank=" + str(rank + 1) + " where filename = '" + filename + "' and rank=" + str(rank))
 		cursor.execute("update files set rank=" + str(rank) + " where filename= '" + filename + "' and name='" + name + "'")
+		self.connection.commit()
 
 	def add(self, filename, image, name, rank):
 		cursor = self.connection.cursor()
-		cursor.execute("insert into files values ('" + image + "'," + "'" + name + "'," + str(rank) + ",'" + filename + "'")
+		cursor.execute("insert into files values ('" + image + "'," + "'" + name + "'," + str(rank) + ",'" + filename + "')")
+		self.connection.commit()
+
+	def update(self, filename, array):
+		cursor = self.connection.cursor()
+		cursor.execute("delete from files where filename = '" + filename + "'")
+		self.connection.commit()
+		for k in range(0, len(array)):
+			self.add(filename, ".", array[k], k)
 
 ##__End Class Definitions__##
