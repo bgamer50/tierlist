@@ -17,10 +17,11 @@ class MainHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
 		self.render("./html/index.html")
-class jqueryHandler(tornado.web.RequestHandler):
+
+class sortableHandler(tornado.web.RequestHandler):
 	@tornado.web.asynchronous
 	def get(self):
-		self.render("./js/jquery.js");
+		self.render("./js/jquery.sortable.js")
 
 class InfoRequestHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
@@ -94,7 +95,7 @@ class Application(tornado.web.Application):
 		handlers = [
 		(r"/", MainHandler),
 		(r"/w", InfoRequestHandler),
-		(r"/jquery", jqueryHandler),
+		(r"/jquerysortable", sortableHandler),
 		(r"/list", ListHandler),
 		(r"/del", DelHandler),
 		(r"/ww", RankChangeHandler),
