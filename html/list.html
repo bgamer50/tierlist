@@ -34,14 +34,13 @@
             	}
         	}
 			function parseData() {
-				fields = ['field1', 'field2', 'field3', 'field4', 'field5'];
-				data = [];
+				list = document.getElementById('thelist');
+				//window.file = [[1, "marth"], [2, "roy"]];
+				/*remove all children*/ while(list.firstChild) { list.removeChild(list.firstChild); }
 				for(var k = 0; k < window.file.length; k++) {
-					var f4 = "";
-					if(k != 0)
-						f4 = "<div id='promote" + window.file[k][1] + "'></div>";
-					
-					data.push({field1: window.file[k][0], field2: window.file[k][1], field3: window.file[k][2], field4: f4, field5: '<img src="/del" alt="Delete" height="18" width="18"'});
+					e = document.createElement('li');
+					e.textContent = window.file[k][1];
+					list.appendChild(e);
 				}
 
 				var f3 = window.file[window.file.length - 1][window.file[0].length - 1] + 1;
@@ -59,33 +58,13 @@
 				namebox.setAttribute('value', 'Enter Name');
 				namebox.setAttribute('id', 'namebox');
 
-				var f4 = "";
-				data.push({field1: ".", field2: "<div id='nameboxContainer'></div>", field3: f3, field4: f4, field5: "<div id='addbuttonContainer'></div>"});
-				var rows = '';
-        		$.each(data, function(index, item) {
-            		var row = '<tr>';
-           			$.each(fields, function(index, field) {
-                		row += '<td>' + item[field+''] + '</td>';
-            		});
-            		rows += row + '<tr>';
-        		});
-        		$('#' + 'listtable' + ' tbody').html(rows);
+				var addholder = document.createElement('li');
+				addholder.appendChild(namebox);
+				addholder.appendChild(addbutton);
 
-        		document.getElementById("nameboxContainer").appendChild(namebox);
-        		document.getElementById("addbuttonContainer").appendChild(addbutton);
-        		promoteButtonLoop(1);
-			}
-			function promoteButtonLoop(k) {
-				if(k < 1 || k >= window.file.length)
-					return;
-				promotebutton = document.createElement('input');
-				promotebutton.setAttribute('type', 'button');
-				promotebutton.setAttribute('value', '+');
+				list.appendChild(addholder);
 
-				promotebutton.addEventListener("click", function(event) { WebSocketChangeRank("" + window.file[k][1], -1 + window.file[k][2]); event.preventDefault(); });
-
-				document.getElementById("promote" + window.file[k][1]).appendChild(promotebutton);
-				promoteButtonLoop(k + 1);
+        		$('.sortable').sortable();
 			}
 			function WebSocketChangeRank(name, rank) {
             	if ("WebSocket" in window) {
@@ -175,11 +154,10 @@
 				document.write("Displaying " + window.filename + ":")
 			</script>
 		</mh>
-		<table id="listtable" class="main">
-			<tbody>
-				<tr><td>N/A</td><td>N/A</td><td>1</td></tr>
-			</tbody>
-		</table>
-		<br/>
+	<ol class="sortable" id='thelist'>
+		<li>1
+		<li>2
+		<li>3
+	</ol>
 	</body>
 </html>
