@@ -23,11 +23,6 @@ class UpdateHandler(tornado.web.RequestHandler):
 			arg = tornado.escape.json_decode(self.request.body)
 			db.update(arg.pop(), arg)
 
-class sortableHandler(tornado.web.RequestHandler):
-	@tornado.web.asynchronous
-	def get(self):
-		self.render("./js/jquery.sortable.js")
-
 class InfoRequestHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
         self.id = self.get_argument("Id")
@@ -52,12 +47,6 @@ class ListHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("./html/list.html");
 
-class DelHandler(tornado.web.RequestHandler):
-	@tornado.web.asynchronous
-	def get(self):
-		self.write(delImg.read())
-		self.finish()
-
 class AddHandler(tornado.web.RequestHandler):
 	def post(self):
 		arg = tornado.escape.json_decode(self.request.body)
@@ -68,11 +57,10 @@ class Application(tornado.web.Application):
 		handlers = [
 		(r"/", MainHandler),
 		(r"/w", InfoRequestHandler),
-		(r"/jquerysortable", sortableHandler),
 		(r"/list", ListHandler),
-		(r"/del", DelHandler),
 		(r"/x", AddHandler),
 		(r"/z", UpdateHandler),
+		(r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "./"}),
 		]
 		settings = {
 			"debug": True,
